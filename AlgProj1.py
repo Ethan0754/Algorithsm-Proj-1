@@ -36,11 +36,17 @@ def owner():
 
 def is_prime(prime_num):
     
+    x = random.randint(2, prime_num)
+    if((x^prime_num-1)%prime_num != 1):
+        return False
+    
+    
+    
     if prime_num < 2:
         return False
     
-    for i in range(2, prime_num):
-        if (prime_num % i) == 0:
+    for i in range(2, math.floor(math.sqrt(prime_num))):
+        if (prime_num%i) == 0:
             return False
     return True
     
@@ -60,16 +66,19 @@ def gen_relative_prime(phi):
             e = random.randint(2, phi)
     return e
 
-def mInverse(e, phi):
+
+def extended_gcd(a =1, b = 1):
+    "Chapt1_Number_and_encryption Page 23"
+    if b == 0:
+        return (1, 0, a)
+    (x, y, z) = extended_gcd(b, a%b)
+    return y, x - a//b*y, z
     
-    for d in range (3, phi-1):
-        if (d * e) % phi == 1:
-            return d
-    return ("not found")
+    
     
 
 def generateKeys():
-    min_prime = 2
+    min_prime = 3
     max_prime = 25
 
     p = genPrime(min_prime, max_prime)
@@ -82,14 +91,19 @@ def generateKeys():
     phi = (p - 1) * (q - 1)
     
     e = gen_relative_prime(phi)
-    d = mInverse (e, phi)
+    x, y, z = extended_gcd(e, phi);
+    
+    d = x%phi
     
     return n, e, d
 
 
 #---------------------------Main-------------------------#
 
-n, e, d = generateKeys()[0], generateKeys()[1], generateKeys()[2]
+n, e, d = generateKeys()
+
+
+
 
 print ("Public Keys: ", n, e)
 print ("Private Key: ", d)
