@@ -33,11 +33,13 @@ def owner():
     return option
     
 #---------------------Back end----------------------------#
+#**************************Key Generation****************#
 
 def is_prime(prime_num):
     
     x = random.randint(2, prime_num)
-    if((x^prime_num-1)%prime_num != 1):
+    y = prime_num-1
+    if(pow(x,y,prime_num) != 1):
         return False
     
     
@@ -78,8 +80,8 @@ def extended_gcd(a =1, b = 1):
     
 
 def generateKeys():
-    min_prime = 3
-    max_prime = 25
+    min_prime = 50
+    max_prime = 500
 
     p = genPrime(min_prime, max_prime)
     q = genPrime(min_prime, max_prime)
@@ -97,17 +99,40 @@ def generateKeys():
     
     return n, e, d
 
+#**************************Key Generation****************#
+
+#**************************Encryption and Decryption*****#
+def encryption(m):
+    full = []
+    x = list(m)
+    for num in m:
+        x = ord(num)
+        y = pow(x, e, n)
+        full.append(y)
+    return full
+
+def decryption(eList):
+    m = ""
+    for num in eList:
+        y = pow(num, d, n)
+        x = chr(y)
+        m += x;
+    return m
+    
+        
 
 #---------------------------Main-------------------------#
 
 n, e, d = generateKeys()
-
-
-
-
 print ("Public Keys: ", n, e)
 print ("Private Key: ", d)
 
+
+eList = encryption("Hi")
+print (eList)
+
+dList = decryption(eList)
+print (dList)
 
 
     
