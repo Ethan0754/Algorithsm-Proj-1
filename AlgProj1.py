@@ -43,8 +43,6 @@ def is_prime(prime_num):
     if(pow(x,y,prime_num) != 1):
         return False
     
-    
-    
     if prime_num < 2:
         return False
     
@@ -77,8 +75,6 @@ def extended_gcd(a =1, b = 1):
     (x, y, z) = extended_gcd(b, a%b)
     return y, x - a//b*y, z
     
-    
-    
 
 def generateKeys():
     min_prime = 50
@@ -96,7 +92,7 @@ def generateKeys():
     e = gen_relative_prime(phi)
     x, y, z = extended_gcd(e, phi);
     
-    d = x%phi
+    d = x % phi
     
     return n, e, d
 
@@ -142,30 +138,62 @@ def genSig(m):
     return s
     
     
-    
-    
 #---------------------------Main-------------------------#
 
-n, e, d = generateKeys()
+""""n, e, d = generateKeys()
 pvKey = [n , e]
 puKey = d
 print ("Public Keys: ", pvKey)
 print ("Private Key: ", puKey)
 
 
+userMessage = input("Enter Sentence to encrypt: ")
 
-eList = encryption("Hi")
-print ("Incrypted Message: ", eList)
+eList = encryption(userMessage)
+print ("Encrypted Message: ", eList)
 
 dList = decryption(eList)
 print ("Decrypted Message: ", dList)
 
 
-userInput = input("Enter a signature");
+userInput = input("Enter a signature: ");
 s = genSig(userInput)
 
 authSig(s, userInput)
 
+"""
+
+n, e, d = generateKeys()
+pvKey = [n , e]
+puKey = d
+opInput = options()
+
+while opInput != '3':
+
+    if opInput == '1':
+           pub = pubUser()
+           if pub == '1':
+               userMessage = input("Enter message: ")
+               eList = encryption(userMessage)
+           elif pub == '2':
+               print('')
+           elif pub == '3':
+               opInput = options()
+    if opInput == '2':
+            own = owner()
+            if own == '1':
+                print('Decrypt message here')
+            elif own == '2':
+                print('digitally sign message here')
+            elif own == '3':
+                print('generate new set of keys here')
+            elif own == '4':
+                print('show keys here')
+            elif own == '5':
+                opInput = options()
+    if opInput == '3':
+            print ('Bye for now!')
+            
 
 
 """authSig(s, m)
