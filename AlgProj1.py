@@ -33,6 +33,7 @@ def owner():
     return option
     
 #---------------------Back end----------------------------#
+
 #**************************Key Generation****************#
 
 def is_prime(prime_num):
@@ -99,7 +100,7 @@ def generateKeys():
     
     return n, e, d
 
-#**************************Key Generation****************#
+
 
 #**************************Encryption and Decryption*****#
 def encryption(m):
@@ -119,22 +120,62 @@ def decryption(eList):
         m += x;
     return m
     
+#**************************Signatures********************#
         
-
+def authSig(s, m):
+    mList = ''
+    for num in s:
+        y = pow(num,e,n)
+        x = chr(y)
+        mList += x;
+    if(mList==m):
+        print("Signature verified")
+        
+    
+def genSig(m):
+    s = []
+    x = list(m)
+    for num in m:
+        x = ord(num)
+        y = pow(x, d, n)
+        s.append(y)
+    return s
+    
+    
+    
+    
 #---------------------------Main-------------------------#
 
 n, e, d = generateKeys()
-print ("Public Keys: ", n, e)
-print ("Private Key: ", d)
+pvKey = [n , e]
+puKey = d
+print ("Public Keys: ", pvKey)
+print ("Private Key: ", puKey)
+
 
 
 eList = encryption("Hi")
-print (eList)
+print ("Incrypted Message: ", eList)
 
 dList = decryption(eList)
-print (dList)
+print ("Decrypted Message: ", dList)
 
 
+userInput = input("Enter a signature");
+s = genSig(userInput)
+
+authSig(s, userInput)
+
+
+
+"""authSig(s, m)
+
+userInput = options()
+if userInput == 1:
+    userInput = pubUser()
+elif userInput == 2;:
+    userInput = owner()"""
+    
     
 
 
