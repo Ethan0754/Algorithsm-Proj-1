@@ -10,7 +10,10 @@ import random
         
 #---------------------------Front end---------------------#
 def options():
-    print("Please select your user type\n\t1.) A public user\n\t2.) The owner of the keys\n\t3.) Exit Program")
+    print("Please select your user type")
+    print("\t1.) A public user")
+    print("\t2.) The owner of the keys")
+    print("\t3.) Exit Program")
     userInput = input("Enter your choice: ")
     return userInput
 
@@ -124,8 +127,10 @@ def authSig(s, m):
         y = pow(num,e,n)
         x = chr(y)
         mList += x;
-    if(mList==m):
-        print("Signature verified")
+    if(mList == m):
+        print("Signature is valid")
+    elif (mList != m):
+        print("Signature is NOT valid")
         
     
 def genSig(m):
@@ -140,7 +145,9 @@ def genSig(m):
     
 #---------------------------Main-------------------------#
 
-""""n, e, d = generateKeys()
+""""
+
+n, e, d = generateKeys()
 pvKey = [n , e]
 puKey = d
 print ("Public Keys: ", pvKey)
@@ -164,10 +171,14 @@ authSig(s, userInput)
 """
 
 n, e, d = generateKeys()
-pvKey = [n , e]
-puKey = d
+puKey = [n , e]
+pvKey = d
+print ("RSA keys have been generated")
+
 opInput = options()
 messages = []
+sigs = []
+sig_user_input = []
 
 while opInput != '3':
 
@@ -179,49 +190,52 @@ while opInput != '3':
                messages.append(eList)
                print ("Message has been encrypted")
            elif pub == '2':
-               print('')
+               if len(sigs) == 0:
+                   print ("There are no signatures to authenticate")
+               else:
+                   print ("The following messages are available")
+                   for i in range (0, len(sigs)):
+                          print(i + 1, ".", sig_user_input[i])
+                   sigOptions = int(input("\nEnter your choice: "))
+                   sigOptions -= 1
+                   a_Sig = authSig(sigs[sigOptions], sig_user_input[sigOptions])
            elif pub == '3':
                opInput = options()
-    elif opInput == '2':
+    elif opInput == '2':                                        # Decrypt message
             own = owner()
             if own == '1':
-                if len(messages) == '0':
+                if len(messages) == 0:
                     print("There are no messages to decrypt!")
                 else:
                     print ("The following messages are available")
                     for i in range (0, len(messages)):
                            print(i + 1, '. (length = ', len(messages[i]), ')')
-                    strOption = int(input("Enter your choice: "))
+                           
+                    strOption = int(input("\nEnter your choice: "))
                     strOption -= 1
                     dList = decryption(messages[strOption])
-                    print ("Decrypted Message: ", dList)
-            elif own == '2':
-                print('digitally sign message here')
-            elif own == '3':
-                print('generate new set of keys here')
-            elif own == '4':
-                print('show keys here')
+                    print ("Decrypted Message: ", dList, '\n')
+            elif own == '2':                                    # Digitally sign a message
+                mySig = input('Enter a message: ')
+                signature = genSig(mySig)
+                sigs.append(signature)
+                sig_user_input.append(mySig)
+                print("Message signed and sent")
+            elif own == '3':                                    # Show current public & private keys
+                print('Public Key: ', puKey)
+                print('Private Key: ', pvKey)
+            elif own == '4':                                    # Generate new set of Keys
+                n, e, d = generateKeys()
+                puKey = [n , e]
+                pvKey = d
             elif own == '5':
                 opInput = options()
+            else:
+                print("\nIncorrect Value Entered\n")
     elif opInput == '3':
-            print ('Bye for now!')
-    else:
-            print("Incorrect Value Entered")
             break
+    else:
+            print("\nIncorrect Value Entered\n")
+            opInput = options()
             
-
-
-"""authSig(s, m)
-
-userInput = options()
-if userInput == 1:
-    userInput = pubUser()
-elif userInput == 2;:
-    userInput = owner()"""
-    
-    
-
-
-
-     
-
+print ("Bye for now!")
