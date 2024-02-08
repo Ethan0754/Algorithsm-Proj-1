@@ -34,7 +34,7 @@ def owner():
     
 #---------------------Back end----------------------------#
 
-#**************************Key Generation****************#
+#**************************Key Generation****************************#
 
 def is_prime(prime_num):
     
@@ -98,7 +98,7 @@ def generateKeys():
 
 
 
-#**************************Encryption and Decryption*****#
+#**************************Encryption and Decryption**********************#
 def encryption(m):
     full = []
     x = list(m)
@@ -167,22 +167,34 @@ n, e, d = generateKeys()
 pvKey = [n , e]
 puKey = d
 opInput = options()
+messages = []
 
 while opInput != '3':
 
     if opInput == '1':
-           pub = pubUser()
+           pub = pubUser() 
            if pub == '1':
                userMessage = input("Enter message: ")
                eList = encryption(userMessage)
+               messages.append(eList)
+               print ("Message has been encrypted")
            elif pub == '2':
                print('')
            elif pub == '3':
                opInput = options()
-    if opInput == '2':
+    elif opInput == '2':
             own = owner()
             if own == '1':
-                print('Decrypt message here')
+                if len(messages) == '0':
+                    print("There are no messages to decrypt!")
+                else:
+                    print ("The following messages are available")
+                    for i in range (0, len(messages)):
+                           print(i + 1, '. (length = ', len(messages[i]), ')')
+                    strOption = int(input("Enter your choice: "))
+                    strOption -= 1
+                    dList = decryption(messages[strOption])
+                    print ("Decrypted Message: ", dList)
             elif own == '2':
                 print('digitally sign message here')
             elif own == '3':
@@ -191,8 +203,11 @@ while opInput != '3':
                 print('show keys here')
             elif own == '5':
                 opInput = options()
-    if opInput == '3':
+    elif opInput == '3':
             print ('Bye for now!')
+    else:
+            print("Incorrect Value Entered")
+            break
             
 
 
