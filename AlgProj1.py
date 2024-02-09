@@ -41,12 +41,13 @@ def owner():
 
 def is_prime(prime_num):
     
-    x = random.randint(2, prime_num)
-    y = prime_num-1
-    if(pow(x,y,prime_num) != 1):
+    if prime_num < 2:
         return False
     
-    if prime_num < 2:
+    x = random.randint(2, prime_num)
+    y = prime_num-1
+    
+    if(pow(x,y,prime_num) != 1):
         return False
     
     for i in range(2, math.floor(math.sqrt(prime_num))):
@@ -128,9 +129,9 @@ def authSig(s, m):
         x = chr(y)
         mList += x;
     if(mList == m):
-        print("Signature is valid")
+        print("Signature is valid\n")
     elif (mList != m):
-        print("Signature is NOT valid")
+        print("Signature is NOT valid\n")
         
     
 def genSig(m):
@@ -145,7 +146,85 @@ def genSig(m):
     
 #---------------------------Main-------------------------#
 
+# Generate Keys: public key = (n, e), private key = d
+n, e, d = generateKeys()
+puKey = [n , e]
+pvKey = d
+print ("RSA keys have been generated")
+
+messages = []           # Stores Encrypted messages
+sigs = []               # Stores signatures
+sig_user_input = []     # Needed to store user-input for authentification because authSig requires two parameters
+opInput = options()     # Opens 'options' menu
+
+# User Interface
+while opInput != '3':
+
+    if opInput == '1':                                          
+           pub = pubUser()                                      # Send Encrypted Message
+           if pub == '1':
+               userMessage = input("Enter message: ")
+               eList = encryption(userMessage)
+               messages.append(eList)
+               print ("Message has been encrypted\n")
+           elif pub == '2':                                     # Authenticate Signature
+               if len(sigs) == 0:
+                   print ("\nThere are no signatures to authenticate\n")
+               else:
+                   print ("The following messages are available")
+                   for i in range (0, len(sigs)):               # Print options
+                          print(i + 1, ".", sig_user_input[i])
+                   sigOptions = int(input("\nEnter your choice: "))
+                   sigOptions -= 1                                  # Subtract 1 because user input sees i + 1
+                   a_Sig = authSig(sigs[sigOptions], sig_user_input[sigOptions])  # Calls function to authenticate
+           elif pub == '3':
+               opInput = options()
+           else:
+               print("\nIncorrect Value Entered\n")
+    elif opInput == '2':                                        # Decrypt message
+            own = owner()
+            if own == '1':
+                if len(messages) == 0:
+                    print("There are no messages to decrypt!")
+                else:
+                    print ("The following messages are available")
+                    for i in range (0, len(messages)):          # Print options
+                           print(i + 1, '. (length = ', len(messages[i]), ')')           
+                    strOption = int(input("\nEnter your choice: "))
+                    strOption -= 1
+                    dList = decryption(messages[strOption])
+                    print ("Decrypted Message: ", dList, '\n')
+            elif own == '2':                                    # Digitally sign a message
+                mySig = input('Enter a message: ')
+                signature = genSig(mySig)
+                sigs.append(signature)                          # Store generated signature in a list
+                sig_user_input.append(mySig)                    # Store user-input-message in a list
+                print("Message signed and sent\n")
+            elif own == '3':                                    # Show current public & private keys
+                print('Public Key: ', puKey)
+                print('Private Key: ', pvKey)
+            elif own == '4':                                    # Generate new set of Keys
+                n, e, d = generateKeys()
+                puKey = [n , e]
+                pvKey = d
+                print ("\nNew Keys Generated!\n")
+            elif own == '5':
+                opInput = options()
+            else:
+                print("\nIncorrect Value Entered\n")
+    elif opInput == '3':
+            break
+    else:
+            print("\nIncorrect Value Entered\n")                # Re-prompt for options value          
+            opInput = options()
+            
+print ("Bye for now!")
+
+
+
 """"
+#-----------------Testing------------------#
+
 
 n, e, d = generateKeys()
 pvKey = [n , e]
@@ -169,74 +248,3 @@ s = genSig(userInput)
 authSig(s, userInput)
 
 """
-
-n, e, d = generateKeys()
-puKey = [n , e]
-pvKey = d
-print ("RSA keys have been generated")
-
-opInput = options()
-messages = []
-sigs = []
-sig_user_input = []
-
-while opInput != '3':
-
-    if opInput == '1':
-           pub = pubUser() 
-           if pub == '1':
-               userMessage = input("Enter message: ")
-               eList = encryption(userMessage)
-               messages.append(eList)
-               print ("Message has been encrypted")
-           elif pub == '2':
-               if len(sigs) == 0:
-                   print ("There are no signatures to authenticate")
-               else:
-                   print ("The following messages are available")
-                   for i in range (0, len(sigs)):
-                          print(i + 1, ".", sig_user_input[i])
-                   sigOptions = int(input("\nEnter your choice: "))
-                   sigOptions -= 1
-                   a_Sig = authSig(sigs[sigOptions], sig_user_input[sigOptions])
-           elif pub == '3':
-               opInput = options()
-    elif opInput == '2':                                        # Decrypt message
-            own = owner()
-            if own == '1':
-                if len(messages) == 0:
-                    print("There are no messages to decrypt!")
-                else:
-                    print ("The following messages are available")
-                    for i in range (0, len(messages)):
-                           print(i + 1, '. (length = ', len(messages[i]), ')')
-                           
-                    strOption = int(input("\nEnter your choice: "))
-                    strOption -= 1
-                    dList = decryption(messages[strOption])
-                    print ("Decrypted Message: ", dList, '\n')
-            elif own == '2':                                    # Digitally sign a message
-                mySig = input('Enter a message: ')
-                signature = genSig(mySig)
-                sigs.append(signature)
-                sig_user_input.append(mySig)
-                print("Message signed and sent")
-            elif own == '3':                                    # Show current public & private keys
-                print('Public Key: ', puKey)
-                print('Private Key: ', pvKey)
-            elif own == '4':                                    # Generate new set of Keys
-                n, e, d = generateKeys()
-                puKey = [n , e]
-                pvKey = d
-                print ("\nNew Keys Generated!\n")
-            elif own == '5':
-                opInput = options()
-            else:
-                print("\nIncorrect Value Entered\n")
-    elif opInput == '3':
-            break
-    else:
-            print("\nIncorrect Value Entered\n")
-            opInput = options()
-            
-print ("Bye for now!")
