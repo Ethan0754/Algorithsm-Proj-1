@@ -2,7 +2,7 @@
 """
 Created on Wed Jan 31 09:17:05 2024
 
-@author: huynh
+@author: Thi Huynh, Ethan Pendergraft, Hunter Henderson
 """
 
 import math
@@ -50,7 +50,7 @@ def is_prime(prime_num):
         return False
     
     for i in range(2, math.floor(math.sqrt(prime_num))):
-        if (prime_num%i) == 0:
+        if (prime_num % i) == 0:
             return False
     return True
     
@@ -71,7 +71,7 @@ def gen_relative_prime(phi):
     return e
 
 
-def extended_gcd(a =1, b = 1):
+def extended_gcd(a = 1, b = 1):
     "Chapt1_Number_and_encryption Page 23"
     if b == 0:
         return (1, 0, a)
@@ -100,8 +100,8 @@ def generateKeys():
     return n, e, d
 
 
-
 #**************************Encryption and Decryption**********************#
+
 def encryption(m):
     full = []
     x = list(m)
@@ -119,7 +119,7 @@ def decryption(eList):
         m += x;
     return m
     
-#**************************Signatures********************#
+#**************************Signatures************************************#
         
 def authSig(s, m):
     mList = ''
@@ -228,6 +228,7 @@ while opInput != '3':
                 n, e, d = generateKeys()
                 puKey = [n , e]
                 pvKey = d
+                print ("\nNew Keys Generated!\n")
             elif own == '5':
                 opInput = options()
             else:
