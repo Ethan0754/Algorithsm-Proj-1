@@ -176,6 +176,10 @@ while opInput != '3':
                           print(i + 1, ".", sig_user_input[i])
                    sigOptions = int(input("\nEnter your choice: "))
                    sigOptions -= 1                                  # Subtract 1 because user input sees i + 1
+                   while sigOptions not in range (len(sigs)):
+                       print("\nIncorrect Value entered\n")  
+                       sigOptions = int(input("\nEnter your choice: "))
+                       sigOptions -= 1
                    a_Sig = authSig(sigs[sigOptions], sig_user_input[sigOptions])  # Calls function to authenticate
            elif pub == '3':
                opInput = options()
@@ -189,9 +193,13 @@ while opInput != '3':
                 else:
                     print ("The following messages are available")
                     for i in range (0, len(messages)):          # Print options
-                           print(i + 1, '. (length = ', len(messages[i]), ')')           
+                           print(i + 1, '. (length = ', len(messages[i]), ')')       
                     strOption = int(input("\nEnter your choice: "))
                     strOption -= 1
+                    while strOption not in range (len(messages)):
+                        print("\nIncorrect Value entered\n")  
+                        strOption = int(input("\nEnter your choice: "))
+                        strOption -= 1
                     dList = decryption(messages[strOption])
                     print ("Decrypted Message: ", dList, '\n')
             elif own == '2':                                    # Digitally sign a message
